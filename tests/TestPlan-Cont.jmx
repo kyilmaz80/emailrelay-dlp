@@ -667,57 +667,6 @@
           <boolProp name="CounterConfig.per_user">false</boolProp>
         </CounterConfig>
         <hashTree/>
-        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Random Msg" enabled="false">
-          <stringProp name="BeanShellSampler.query">import java.util.Date;
-	import java.text.DateFormat;
-	import java.text.SimpleDateFormat;
-
-	msg1 = &quot;OSSEC HIDS Notification. \n&quot; 
-				      + &quot;2016 Mar 09 18:35:14\n&quot; 
-				      + &quot;Received From: localhost-&gt;/var/log/messages\n&quot;
-							+ &quot;Rule: 1002 fired (level 2) -&gt; \&quot;Unknown problem somewhere in the system.\&quot;\n&quot;;
-	msg2 = &quot;İşlerin Günlük Durum Raporu&quot;;
-
-	msg3 = &quot;Merhaba,\n&quot;
-		   + &quot;İş analiz formlarını bugün tamamlayıp iletebilir misiniz rica etsem?\n&quot;;
-
-	msg4 = &quot;Bunun güvenlik testleri için iş talep yeterli olur mu yoksa EBYS üzerinden resmi yazı mı yazmak gerekir?\n&quot;
-	       + &quot;Ayrıca diğer konuyla(daha önceki mailimde ilettiğim gereksinimleri içeren sunucu isteği) &quot; 
-	       + &quot;ilgili olarak da resmi yazı iletecekler sanırım. &quot;;
-
-	msg5   = &quot;if this sounds interesting to you, let us know and we will arrange a complimentary session with a&quot; 
-		 + &quot;Liquidware Labs engineer to assess if this solution can bring value to your environment.&quot;  
-		 + &quot; Contact us at info@distilogix.com&quot;;
-
-	msg6 = &quot;73354 numaralı iş talebinde de belirtilen ve web sayfasında ivedi olarak güncellenmesi &quot; 
-	       + &quot;gerekli olan söz konusu dosyalar ektedir.&quot;;
-
-
-
-	String[] query = new String[]{msg1, msg2, msg3, msg4, msg5, msg6 };
-
-	Random random = new Random();
-
-	int i = random.nextInt(query.length);
-
-	DateFormat dateFormat = new SimpleDateFormat(&quot;yyyy/MM/dd HH:mm:ss&quot;);
-	Date myDate = new Date();
-	currentDate = dateFormat.format(myDate);
-
-	log.info(&quot;Random text @ &quot; + currentDate + &quot; @ thread &quot; + ${__threadNum} + &quot; = &quot; +  query[i]);
-	print(&quot;Random text @ &quot; + currentDate + &quot; @ thread &quot; + ${__threadNum} + &quot; = &quot; +  query[i]);
-
-	//print(&quot;*******Random text: &quot; + query[i]);
-	//log.info(&quot;*******Random text: &quot; + query[i]);
-	vars.put(&quot;MSG&quot;, query[i]);
-
-
-	</stringProp>
-          <stringProp name="BeanShellSampler.filename"></stringProp>
-          <stringProp name="BeanShellSampler.parameters"></stringProp>
-          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
-        </BeanShellSampler>
-        <hashTree/>
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Msg" enabled="true">
           <stringProp name="BeanShellSampler.query">import java.util.Date;
 import java.text.DateFormat;
@@ -743,8 +692,8 @@ vars.put(&quot;MSG&quot;, message );</stringProp>
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Save to CSV" enabled="true">
           <stringProp name="TestPlan.comments">save random message inputs to a csv file</stringProp>
           <stringProp name="BeanShellSampler.query">    //String fileName = vars.get(&quot;CSVFILENAME&quot;) + &quot;.csv&quot;;
-	String FILENAME = &quot;/home/koray/codes/TEZ/msgs.csv&quot;;
-     String FILENAME2 = &quot;/home/koray/codes/TEZ/sample_count1.csv&quot;;
+	String FILENAME = &quot;./msgs.csv&quot;;
+     String FILENAME2 = &quot;./sample_count1.csv&quot;;
 	FileWriter fstream = new FileWriter(FILENAME, true);
 	BufferedWriter out = new BufferedWriter(fstream);
 
@@ -1747,34 +1696,6 @@ ${MSG}</stringProp>
           <boolProp name="CounterConfig.per_user">false</boolProp>
         </CounterConfig>
         <hashTree/>
-        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Random Msg" enabled="false">
-          <stringProp name="BeanShellSampler.query">import java.util.Date;
-	import java.text.DateFormat;
-	import java.text.SimpleDateFormat;
-
-	String[] query = new String[]{&quot;_DLP_ 79436701850&quot;, &quot;_DLP_ 70081794860&quot;, &quot;Merhaba Dünya&quot;, &quot;Test&quot;, &quot;Test123&quot;, &quot;Ahmet 13321445412&quot;};
-	Random random = new Random();
-
-	int i = random.nextInt(query.length);
-
-	DateFormat dateFormat = new SimpleDateFormat(&quot;yyyy/MM/dd HH:mm:ss&quot;);
-	Date myDate = new Date();
-	currentDate = dateFormat.format(myDate);
-
-	log.info(&quot;Random text @ &quot; + currentDate + &quot; @ thread &quot; + ${__threadNum} + &quot; = &quot; +  query[i]);
-	print(&quot;Random text @ &quot; + currentDate + &quot; @ thread &quot; + ${__threadNum} + &quot; = &quot; +  query[i]);
-
-	//print(&quot;*******Random text: &quot; + query[i]);
-	//log.info(&quot;*******Random text: &quot; + query[i]);
-	vars.put(&quot;MSG&quot;, query[i]);
-
-
-	</stringProp>
-          <stringProp name="BeanShellSampler.filename"></stringProp>
-          <stringProp name="BeanShellSampler.parameters"></stringProp>
-          <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
-        </BeanShellSampler>
-        <hashTree/>
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Msg" enabled="true">
           <stringProp name="BeanShellSampler.query">import java.util.Date;
 import java.text.DateFormat;
@@ -1800,8 +1721,8 @@ vars.put(&quot;MSG&quot;, message );</stringProp>
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Save to CSV" enabled="true">
           <stringProp name="TestPlan.comments">save random message inputs to a csv file</stringProp>
           <stringProp name="BeanShellSampler.query">    //String fileName = vars.get(&quot;CSVFILENAME&quot;) + &quot;.csv&quot;;
-	String FILENAME = &quot;/home/koray/codes/TEZ/msgs.csv&quot;;
-     String FILENAME2 = &quot;/home/koray/codes/TEZ/sample_count2.csv&quot;;
+	String FILENAME = &quot;./msgs.csv&quot;;
+     String FILENAME2 = &quot;./sample_count2.csv&quot;;
 	FileWriter fstream = new FileWriter(FILENAME, true);
 	BufferedWriter out = new BufferedWriter(fstream);
 
@@ -2269,7 +2190,7 @@ ${MSG}
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-File folder = new File(&quot;/home/koray/Documents/TEZ/TEST&quot;);
+File folder = new File(&quot;./data&quot;);
 File [] docs = folder.listFiles();
 N = docs.length;
 
@@ -2344,8 +2265,8 @@ vars.put(&quot;CURRENTFILE&quot;, files[idx]);
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Save to CSV" enabled="true">
           <stringProp name="TestPlan.comments">save random message inputs to a csv file</stringProp>
           <stringProp name="BeanShellSampler.query">//String fileName = vars.get(&quot;CSVFILENAME&quot;) + &quot;.csv&quot;;
-	String FILENAME = &quot;/home/koray/codes/TEZ/msgs.csv&quot;;
-     String FILENAME2 = &quot;/home/koray/codes/TEZ/sample_count3.csv&quot;;
+	String FILENAME = &quot;./msgs.csv&quot;;
+     String FILENAME2 = &quot;./sample_count3.csv&quot;;
 	FileWriter fstream = new FileWriter(FILENAME, true);
 	BufferedWriter out = new BufferedWriter(fstream);
 	FileWriter fstream2 = new FileWriter(FILENAME2, true);
@@ -2597,7 +2518,7 @@ vars.put(&quot;CURRENTFILE&quot;, files[idx]);
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-File folder = new File(&quot;/home/koray/Documents/TEZ/TEST_OCR&quot;);
+File folder = new File(&quot;./data_ocr&quot;);
 File [] docs = folder.listFiles();
 N = docs.length;
 
@@ -2672,8 +2593,8 @@ vars.put(&quot;CURRENTFILE&quot;, files[idx]);
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Save to CSV" enabled="true">
           <stringProp name="TestPlan.comments">save random message inputs to a csv file</stringProp>
           <stringProp name="BeanShellSampler.query">//String fileName = vars.get(&quot;CSVFILENAME&quot;) + &quot;.csv&quot;;
-String FILENAME = &quot;/home/koray/codes/TEZ/msgs.csv&quot;;
-String FILENAME2 = &quot;/home/koray/codes/TEZ/sample_count4.csv&quot;;
+String FILENAME = &quot;./msgs.csv&quot;;
+String FILENAME2 = &quot;./sample_count4.csv&quot;;
 FileWriter fstream = new FileWriter(FILENAME, true);
 BufferedWriter out = new BufferedWriter(fstream);
 FileWriter fstream2 = new FileWriter(FILENAME2, true);
@@ -2904,7 +2825,7 @@ fstream2.close();</stringProp>
           <stringProp name="folder">INBOX</stringProp>
           <stringProp name="host">mail.test.local</stringProp>
           <stringProp name="username">test1</stringProp>
-          <stringProp name="password">k7o0r4</stringProp>
+          <stringProp name="password">qwerty</stringProp>
           <intProp name="num_messages">-1</intProp>
           <boolProp name="delete">true</boolProp>
           <stringProp name="SMTPSampler.useSSL">false</stringProp>
@@ -2936,11 +2857,11 @@ fstream2.close();</stringProp>
 			log.info(&quot;File not found&quot;);
 		}
 	}
-	deleteFile(&quot;/home/koray/codes/TEZ/mydlp_log_cnt.csv&quot;);
-	deleteFile(&quot;/home/koray/codes/TEZ/msgs.csv&quot;);
-	deleteFile(&quot;/home/koray/codes/TEZ/sample_count1.csv&quot;);
-	deleteFile(&quot;/home/koray/codes/TEZ/sample_count2.csv&quot;);
-	deleteFile(&quot;/home/koray/codes/TEZ/sample_count3.csv&quot;);
+	deleteFile(&quot;./mydlp_log_cnt.csv&quot;);
+	deleteFile(&quot;./msgs.csv&quot;);
+	deleteFile(&quot;./sample_count1.csv&quot;);
+	deleteFile(&quot;./sample_count2.csv&quot;);
+	deleteFile(&quot;./sample_count3.csv&quot;);
 </stringProp>
           <stringProp name="BeanShellSampler.filename"></stringProp>
           <stringProp name="BeanShellSampler.parameters"></stringProp>
@@ -3104,7 +3025,7 @@ fstream2.close();</stringProp>
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="BeanShell Sampler Save to CSV" enabled="true">
           <stringProp name="TestPlan.comments">write record count to a file mydlp_log_cnt.csv</stringProp>
           <stringProp name="BeanShellSampler.query">//String fileName = vars.get(&quot;CSVFILENAME&quot;) + &quot;.csv&quot;;
-	FileWriter fstream = new FileWriter(&quot;/home/koray/codes/TEZ/mydlp_log_cnt.csv&quot;, false);
+	FileWriter fstream = new FileWriter(&quot;./mydlp_log_cnt.csv&quot;, false);
 	BufferedWriter out = new BufferedWriter(fstream);
 
 	out.write(vars.get(&quot;recordsTotal_JSON&quot;));
@@ -3264,7 +3185,7 @@ fileInputStream.close();</stringProp>
             <stringProp name="folder">INBOX</stringProp>
             <stringProp name="host">mail.test.local</stringProp>
             <stringProp name="username">test1</stringProp>
-            <stringProp name="password">k7o0r4</stringProp>
+            <stringProp name="password">qwerty</stringProp>
             <intProp name="num_messages">-1</intProp>
             <boolProp name="headerOnly">true</boolProp>
             <boolProp name="delete">false</boolProp>
@@ -3665,7 +3586,7 @@ if (emailrelay_testing) {
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-String FILENAME = &quot;/home/koray/codes/TEZ/msgs.csv&quot;;
+String FILENAME = &quot;./msgs.csv&quot;;
 FileInputStream fileInputStream = new FileInputStream(FILENAME);
 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);//An InputStreamReader is a bridge from byte streams to character streams
 log.info(&quot;******************DLP Mail Count started*************&quot;);
