@@ -29,13 +29,14 @@ date 170610
 """
 __author__ = 'KORAY YILMAZ'
 __email__ = 'kyilmaz80@gmail.com'
-__version__ = '1.00'
+__version__ = '1.01'
 
 # constants
 OCR_HOST = 'ocr.test.local'
 IMG_HTTP_HOST = 'images.test.local'
 TIKA_HOST = 'tika.test.local'
 ES_SERVER = 'elk.test.local'
+ES_AUTH = ('elastic','changeme')
 ES_INDEX_NAME = 'test'
 PATTERN_THREASHOLD = 2
 REMOTE_OCR = True
@@ -76,7 +77,7 @@ def main(file_name, patterns_dict=None, regexes_list=None):
     result = sock.connect_ex((ES_SERVER, 9200))
     if result == 0:
         logging.info("Elastic Search port is open")
-        es = Elasticsearch(hosts=ES_SERVER)
+        es = Elasticsearch(hosts=ES_SERVER, http_auth=ES_AUTH)
         if es.ping():
             isClusterReady = True
         else:
