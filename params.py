@@ -3,7 +3,9 @@
 
 # parse_msg variables
 OCR_HOST = 'ocr.test.local'
+OCR_PORT = '5000'
 IMG_HTTP_HOST = 'images.test.local'
+IMG_HTTP_PORT = '8000'
 TIKA_HOST = 'tika.test.local'
 ES_SERVER = 'elk.test.local'
 ES_AUTH = ('elastic', 'changeme')
