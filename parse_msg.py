@@ -22,28 +22,15 @@ import pyocr
 import pyocr.builders
 import requests
 import csv
+import params
 
 """
 E-mail eml message parser
-date 170610
+date 170707
 """
 __author__ = 'KORAY YILMAZ'
 __email__ = 'kyilmaz80@gmail.com'
-__version__ = '1.01'
-
-# constants
-OCR_HOST = 'ocr.test.local'
-IMG_HTTP_HOST = 'images.test.local'
-TIKA_HOST = 'tika.test.local'
-ES_SERVER = 'elk.test.local'
-ES_AUTH = ('elastic','changeme')
-ES_INDEX_NAME = 'test'
-PATTERN_THREASHOLD = 2
-REMOTE_OCR = True
-OCR_LANG = 'tur'
-ACTION = {}
-ACTION['AUDIT'] = 100
-ACTION['BLOCK'] = 1
+__version__ = '1.02'
 
 
 def main(file_name, patterns_dict=None, regexes_list=None):
@@ -74,10 +61,10 @@ def main(file_name, patterns_dict=None, regexes_list=None):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(1)
-    result = sock.connect_ex((ES_SERVER, 9200))
+    result = sock.connect_ex((params.ES_SERVER, 9200))
     if result == 0:
         logging.info("Elastic Search port is open")
-        es = Elasticsearch(hosts=ES_SERVER, http_auth=ES_AUTH)
+        es = Elasticsearch(hosts=params.ES_SERVER, http_auth=params.ES_AUTH)
         if es.ping():
             isClusterReady = True
         else:
@@ -121,7 +108,7 @@ def main(file_name, patterns_dict=None, regexes_list=None):
         # paternler eslesiyor mu
         data['message'] = strContent.rstrip('\n')
         if patternsMatchScore(strContent, patterns,
-                              regexes_list) >= PATTERN_THREASHOLD:
+                              regexes_list) >= params.PATTERN_THREASHOLD:
             logging.warning('Pattern found')
             logging.info('logging the %s long pattern record...',
                          len(data['message']))
@@ -138,7 +125,8 @@ def main(file_name, patterns_dict=None, regexes_list=None):
                     logging.error(e)
                 else:
                     try:
-                        es.index(index=ES_INDEX_NAME, doc_type='message',
+                        es.index(index=params.ES_INDEX_NAME,
+                                 doc_type='message',
                                  body=datajson, request_timeout=30)
                         logging.info('elasticsearch index successful')
                     except Exception as e:
@@ -153,7 +141,7 @@ def main(file_name, patterns_dict=None, regexes_list=None):
             add_dlp_header(file_name, msg)
             logging.info('----------------- PROCESS DONE ---------------')
             logging.info('App ended.')
-            return ACTION['AUDIT']
+            return params.ACTION['AUDIT']
             # sys.exit(100)
         else:
             logging.info('----------------- PROCESS DONE ---------------')
@@ -163,7 +151,7 @@ def main(file_name, patterns_dict=None, regexes_list=None):
 
 
 def tika_content(string, file_name,
-                 serverEndPoint=u'http://' + TIKA_HOST + ':9998'):
+                 serverEndPoint=u'http://' + params.TIKA_HOST + ':9998'):
     """
     converts the binary file to string via Apache Tika interface
     return converted string
@@ -422,9 +410,9 @@ def remote_ocr_content(files, lang):
 
     # constants
     OCR_PORT = '5000'
-    ocr_url = 'http://' + OCR_HOST + ':' + OCR_PORT + '/v1/ocr'
+    ocr_url = 'http://' + params.OCR_HOST + ':' + OCR_PORT + '/v1/ocr'
     IMG_HTTP_PORT = '8000'
-    img_url = 'http://' + IMG_HTTP_HOST + ':' + IMG_HTTP_PORT
+    img_url = 'http://' + params.IMG_HTTP_HOST + ':' + IMG_HTTP_PORT
 
     def post_request(file_path):
         """
@@ -439,7 +427,7 @@ def remote_ocr_content(files, lang):
             response = requests.post(ocr_url, data=json.dumps(payload),
                                      headers=headers)
         except OSError:
-            logging.error("%s ocr request problem!", OCR_HOST)
+            logging.error("%s ocr request problem!", params.OCR_HOST)
             return ""
         json_data = json.loads(response.text)
         # logging.info("Json data: %s", json_data)
@@ -447,7 +435,7 @@ def remote_ocr_content(files, lang):
             return json_data['output']
         else:
             logging.error("%s ocr request result is not as expected,\
-                          image web server running?", OCR_HOST)
+                          image web server running?", params.OCR_HOST)
             return ''
 
     if files is None or len(files) == 0:
@@ -589,11 +577,12 @@ def search_body_content(msg, clist=None):
                     logging.info("IMG_FILES: %s", img_files)
                     # use turkish lang for detection
                     # TODO: detect the document language (via for ex. tika)
-                    if REMOTE_OCR:
+                    if params.REMOTE_OCR:
                         attachmentContent = remote_ocr_content(img_files,
-                                                               OCR_LANG)
+                                                               params.OCR_LANG)
                     else:
-                        attachmentContent = ocr_content(img_files, OCR_LANG)
+                        attachmentContent = ocr_content(img_files,
+                                                        params.OCR_LANG)
 
                     attachmentContent = remove_blank_lines(attachmentContent)
                     # logging.info("pdf image file content: %s",
