@@ -30,7 +30,7 @@ date 170707
 """
 __author__ = 'KORAY YILMAZ'
 __email__ = 'kyilmaz80@gmail.com'
-__version__ = '1.02'
+__version__ = '1.03'
 
 
 def main(file_name, patterns_dict=None, regexes_list=None):
@@ -407,12 +407,8 @@ def remote_ocr_content(files, lang):
     """
     gets the text content from image files remotely
     """
-
-    # constants
-    OCR_PORT = '5000'
-    ocr_url = 'http://' + params.OCR_HOST + ':' + OCR_PORT + '/v1/ocr'
-    IMG_HTTP_PORT = '8000'
-    img_url = 'http://' + params.IMG_HTTP_HOST + ':' + IMG_HTTP_PORT
+    ocr_url = 'http://' + params.OCR_HOST + ':' + params.OCR_PORT + '/v1/ocr'
+    img_url = 'http://' + params.IMG_HTTP_HOST + ':' + params.IMG_HTTP_PORT
 
     def post_request(file_path):
         """
