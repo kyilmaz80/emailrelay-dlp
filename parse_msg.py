@@ -26,11 +26,11 @@ import params
 
 """
 E-mail eml message parser
-date 170707
+date 170708
 """
 __author__ = 'KORAY YILMAZ'
 __email__ = 'kyilmaz80@gmail.com'
-__version__ = '1.03'
+__version__ = '1.04'
 
 
 def main(file_name, patterns_dict=None, regexes_list=None):
@@ -305,13 +305,8 @@ def extract_image_pdf(file_path):
         logging.error("/usr/bin/pdfimages command not found!")
         return None
 
-    # constants
-    IMG_PATH = '/tmp'
-    FIRST_FIVE = 5
-    OCR_THRESHOLD = 5
-
     pdf_name = clean_str(file_path.split('/')[-1].split('.')[0])
-    img_root = IMG_PATH + '/' + '_img_' + pdf_name
+    img_root = params.IMG_PATH + '/' + '_img_' + pdf_name
 
     # get pdf page rotation xobj
     pdf_rotation = get_pdf_rotation(file_path)
@@ -326,6 +321,7 @@ def extract_image_pdf(file_path):
     reader = PdfReader(file_path)
     page_count = int(reader.numPages)
 
+    FIRST_FIVE = params.FIRST_FIVE
     if page_count < FIRST_FIVE:
         FIRST_FIVE = page_count
 
@@ -333,8 +329,8 @@ def extract_image_pdf(file_path):
                            file_path, img_root])
     if ret == 0:
         logging.info('pdfimages successfully ended')
-        files = [os.path.join(IMG_PATH, f) for f in
-                 os.listdir(IMG_PATH) if '_img_' + pdf_name in f]
+        files = [os.path.join(params.IMG_PATH, f) for f in
+                 os.listdir(params.IMG_PATH) if '_img_' + pdf_name in f]
 
         if len(files) > FIRST_FIVE:
             files = files[:FIRST_FIVE]
@@ -355,8 +351,8 @@ def extract_image_pdf(file_path):
             for img in files:
                 logging.info("rotating the image files...")
                 rotate_image(img, img_rotation)
-        if len(files) > OCR_THRESHOLD:
-            return files[0:OCR_THRESHOLD]
+        if len(files) > params.OCR_THRESHOLD:
+            return files[0:params.OCR_THRESHOLD]
         return files
     else:
         logging.error("PDFIMAGES for %s not successfull!", file_path)
