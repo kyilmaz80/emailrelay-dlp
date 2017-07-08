@@ -1,0 +1,82 @@
+FROM centos:7
+MAINTAINER Koray YILMAZ <kyilmaz80@gmail.com>
+
+ENV LEPTONICA_VER 1.74.4
+
+# build essentials
+RUN yum -y --setopt=tsflags=nodocs update && \
+	yum -y --setopt=tsflags=nodocs install autoconf && \
+	yum -y --setopt=tsflags=nodocs install libpng12-devel && \
+	yum -y --setopt=tsflags=nodocs install libjpeg-turbo-devel && \
+	yum -y --setopt=tsflags=nodocs install gcc && \
+	yum -y --setopt=tsflags=nodocs install gcc-c++ && \
+	yum -y --setopt=tsflags=nodocs install libtiff-devel && \
+	yum -y --setopt=tsflags=nodocs install opencv-devel && \
+	yum -y --setopt=tsflags=nodocs install epel-release && \
+	yum -y --setopt=tsflags=nodocs install log4cplus-devel && \
+	yum -y --setopt=tsflags=nodocs install libcurl-devel && \
+	yum -y --setopt=tsflags=nodocs install python-devel && \
+	yum -y --setopt=tsflags=nodocs install tk && \
+	yum -y --setopt=tsflags=nodocs install tk-devel && \
+	yum -y --setopt=tsflags=nodocs install python-imaging && \
+	yum -y --setopt=tsflags=nodocs install ImageMagick && \
+	yum -y --setopt=tsflags=nodocs install python-virtualenv && \
+	yum -y --setopt=tsflags=nodocs install wget && \
+    yum -y --setopt=tsflags=nodocs install git && \
+    yum -y --setopt=tsflags=nodocs install python2-pip && \
+    yum -y --setopt=tsflags=nodocs install libtool && \
+	yum -y --setopt=tsflags=nodocs install automake && \
+	yum -y --setopt=tsflags=nodocs install cmake && \
+	yum -y --setopt=tsflags=nodocs install make && \
+    yum -y --setopt=tsflags=nodocs install autoconf-archive && \
+	yum clean all
+
+# leptonica build
+WORKDIR /usr/local/src/
+RUN wget http://www.leptonica.org/source/leptonica-${LEPTONICA_VER}.tar.gz && \
+	tar xvzf leptonica-${LEPTONICA_VER}.tar.gz && \
+	cd leptonica-${LEPTONICA_VER} && \
+ 	#mkdir build  && \
+    #cd build && \
+    #export TERM=linux && \
+    #cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. && \
+    ./configure && \
+    make && \
+    make install && \
+    rm -f /usr/local/src/leptonica-${LEPTONICA_VER}.tar.gz && \
+	rm -rf /usr/local/src/leptonica-${LEPTONICA_VER}
+
+#RUN pkg-config --cflags --libs leptonica -I/usr/include/leptonica  -L/usr/lib -lleptonica 
+RUN export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig/:/usr/lib64/pkgconfig
+RUN find / -name lept.pc
+RUN pkg-config --cflags lept
+RUN ldconfig
+
+
+# tesseract build
+RUN git clone --depth 1  https://github.com/tesseract-ocr/tesseract.git tesseract-ocr && \
+    cd tesseract-ocr && \
+    # echo /usr/local/lib >> /etc/ld.so.conf && \
+    # ldconfig --verbose && \
+    #./autogen.sh && \
+    #./configure && \
+    mkdir build && \
+    cd build && cmake .. && make && \
+    sudo make install && \
+    #make && \
+    #sudo make install && \
+    #sudo make install-langs && \
+    #sudo ldconfig
+ 
+# python ocr tutorial
+WORKDIR /opt
+RUN	git clone https://github.com/kyilmaz80/python_ocr_tutorial/ && \
+	cd /opt/python_ocr_tutorial/ && \
+	pip install --upgrade pip && \
+	pip install -r requirements.txt
+
+WORKDIR /opt/python_ocr_tutorial/flask_server
+
+EXPOSE 80
+CMD ["python", "app.py"]
+
