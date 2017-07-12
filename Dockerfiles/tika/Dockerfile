@@ -7,7 +7,7 @@ WORKDIR $INSTALL_PATH
 ADD config.xml ./
 ENV TIKA_JAR="tika-server.jar" \
     TIKA_MEMORY="1g" \
-    TIKA_VERSION="1.15"
+    TIKA_VERSION="1.16"
 
 LABEL description="Apache Tika Server" \
       version=${TIKA_VERSION}
