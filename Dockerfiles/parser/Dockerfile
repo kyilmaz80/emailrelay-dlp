@@ -11,12 +11,14 @@ RUN apt-get update && \
     apt-get -y install git
 
 RUN rm -rf emailrelay-dlp
-RUN git clone --depth 1 https://github.com/kyilmaz80/emailrelay-dlp
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN git clone --depth 1 https://github.com/kyilmaz80/emailrelay-dlp
 
 WORKDIR $INSTALL_PATH/emailrelay-dlp/
 
+RUN pip install --no-cache-dir -r requirements.txt
+
 EXPOSE 1235
+
 CMD [ "python", "./parse_server.py" ]
 
