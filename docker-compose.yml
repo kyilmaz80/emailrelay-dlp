@@ -7,6 +7,8 @@ services:
     expose:
       - 587
     hostname: emailrelay-in
+    volumes:
+      - ERSpoolVolume:/var/spool/emailrelay
     depends_on:
       - emailrelay-out
     networks:
@@ -15,8 +17,7 @@ services:
   emailrelay-out:
     image: pataquets/emailrelay
     ports:
-      - 10025:10025
-    hostname: emailrelay-out
+      - ${ER_OUT_PORTNO}
     networks:
       - ernet
     extra_hosts:
@@ -34,13 +35,20 @@ services:
       - --tls-config=1
       - --log-time
       - --port
-      - "10025"  
+      - "${ER_OUT_PORTNO}"  
       - --filter
       - net:emailrelay-parser:1235 
       - --filter-timeout
       - "70"
       - --remote-clients
 
+  emailrelay-resubmit:
+    build: ./Dockerfiles/resubmit
+    volumes_from:
+      - emailrelay-in
+    networks:
+      - ernet
+ 
   emailrelay-parser:
     build: ./Dockerfiles/parser
     ports: 
@@ -115,6 +123,7 @@ services:
     networks:
       - ernet
 volumes:
+  ERSpoolVolume:
   ERDataVolume:
   ESDataVolume:
   ImagesVolume:
