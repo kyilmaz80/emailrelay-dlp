@@ -1,1 +1,0 @@
-5 * * * * /script.sh >> /var/log/script.log
