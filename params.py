@@ -25,6 +25,5 @@ LHOST = 'postfix-filter.test.local'
 LPORT = 10025
 RHOST = 'mail.test.local'
 RPORT = 10026
-PATTERN_FILE = './PATTERNS'
 FILTER_QUEUE_PATH = '/var/spool/postfix-filter'
 
