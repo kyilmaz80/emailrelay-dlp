@@ -9,6 +9,7 @@ from elasticsearch import Elasticsearch
 from PIL import Image
 from PIL import ImageFilter
 import sys
+import inspect
 import email
 import logging
 import coloredlogs
@@ -30,7 +31,7 @@ date 180725
 """
 __author__ = 'KORAY YILMAZ'
 __email__ = 'kyilmaz80@gmail.com'
-__version__ = '1.06'
+__version__ = '1.07'
 
 
 class EmailMessage(object):
@@ -632,6 +633,8 @@ class EmailMessage(object):
             :return: dict of patterns
             """
             patternsDict = {}
+            logging.info("---------")
+            logging.info(file_path)
             try:
                 with open(file_path, mode='r') as csvfile:
                     reader = csv.reader(csvfile)
@@ -767,7 +770,8 @@ class EmailMessage(object):
 
         contentList = self.search_body_content()
 
-        PATTERN_FILE = './PATTERNS'
+        current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        PATTERN_FILE = current_dir + '/PATTERNS'
         if patterns_dict is None:
             patterns = load_patterns(PATTERN_FILE)
         else:
