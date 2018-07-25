@@ -21,8 +21,10 @@ ACTION['AUDIT'] = 100
 ACTION['BLOCK'] = 1
 
 # parse_server variables
-HOST = 'emailrelay-parser'
-PORT = 1235
-MAX_REQUESTS = 10
+LHOST = 'postfix-filter.test.local'
+LPORT = 10025
+RHOST = 'mail.test.local'
+RPORT = 10026
 PATTERN_FILE = './PATTERNS'
-EML_MOUNT = '/var/spool/emailrelay'
+FILTER_QUEUE_PATH = '/var/spool/postfix-filter'
+
