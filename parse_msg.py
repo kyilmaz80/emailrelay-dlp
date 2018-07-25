@@ -10,7 +10,6 @@ from PIL import Image
 from PIL import ImageFilter
 import sys
 import email
-import re
 import logging
 import coloredlogs
 import json
@@ -23,6 +22,7 @@ import pyocr.builders
 import requests
 import csv
 import params
+from common import *
 
 """
 E-mail eml/str message parser
@@ -30,13 +30,21 @@ date 180725
 """
 __author__ = 'KORAY YILMAZ'
 __email__ = 'kyilmaz80@gmail.com'
-__version__ = '1.05'
+__version__ = '1.06'
 
 
 class EmailMessage(object):
     """
     Custom Email Message Parser Class for file eml
     """
+
+    # logging
+    coloredlogs.install()
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - \
+                                                   %(threadName)s - %(message)s',
+                        filename='/tmp/parsemsg.log',
+                        filemode='a', level=logging.DEBUG)
+
     def __init__(self, message_fname='', message_string=''):
         """
         usage: EmailMessage(message_fname='filepath') or
@@ -48,6 +56,7 @@ class EmailMessage(object):
         self.message_string = message_string
         self.PARSE_FROM_EML = message_fname != ''
         self.PARSE_FROM_STR = message_string != ''
+        # TODO: add md5sum of parts and content to a structure
         self.parts = []
         # create email message object from message file or string
         if self.message_fname != '':
@@ -122,6 +131,25 @@ class EmailMessage(object):
                 lst_copy = copy.copy(lst)
                 lst_copy.pop()
                 return find_parent(lst_copy, part_tuple)
+
+        def remove_blank_lines(str_content):
+            """
+            removes the blank lines in string
+            :param str_content: string content
+            :return: "" if error occurred, removed string if no error
+            """
+            if type(str_content) is not str:
+                logging.warning('str type is expected for str_content but %s type\
+                                is recieved', type(str_content))
+                return ""
+            elif str_content is not None:
+                # wierd email forward can occur sometimes if not cleaned
+                # replace non unicode chars with ? char
+                # return os.linesep.join([clean_str(s,' ? ',True) for s in
+                # str_content.splitlines() if s])
+                return os.linesep.join([s for s in str_content.splitlines() if s])
+            else:
+                return ""
 
         def tika_content(string, file_name,
                          serverEndPoint=u'http://' + params.TIKA_HOST + ':9998'):
@@ -210,41 +238,6 @@ class EmailMessage(object):
                 return None
             else:
                 return (parsed['content'], parsed['metadata']['Content-Type'])
-
-        def clean_str(mystr, str_rep='', removeNonUnicode=False):
-            """
-            removes the special characters in the str.
-            :param mystr: a string
-            :param str_rep: replace string chacter
-            :param removeNonUnicode: boolean
-            :return: modified string
-            """
-            if type(mystr) is str or mystr is not None:
-                if removeNonUnicode:
-                    return re.sub('\W+', str_rep, mystr)
-                else:
-                    return re.sub('[^A-Za-z0-9._]+', '', mystr)
-            else:
-                return mystr
-
-        def remove_blank_lines(str_content):
-            """
-            removes the blank lines in string
-            :param str_content: string content
-            :return: "" if error occurred, removed string if no error
-            """
-            if type(str_content) is not str:
-                logging.warning('str type is expected for str_content but %s type\
-                                is recieved', type(str_content))
-                return ""
-            elif str_content is not None:
-                # wierd email forward can occur sometimes if not cleaned
-                # replace non unicode chars with ? char
-                # return os.linesep.join([clean_str(s,' ? ',True) for s in
-                # str_content.splitlines() if s])
-                return os.linesep.join([s for s in str_content.splitlines() if s])
-            else:
-                return ""
 
         def get_attachment_content(part):
             """
@@ -729,12 +722,6 @@ class EmailMessage(object):
                         match_score = match_score + len(matches) * \
                                       int(_patterns['HO'][1])
             return match_score
-
-        coloredlogs.install()
-        logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - \
-                            %(threadName)s - %(message)s',
-                            filename='/tmp/parsemsg.log',
-                            filemode='a', level=logging.DEBUG)
 
         logging.info('-------------------- PROCESS START --------------------')
         logging.info('App started')
