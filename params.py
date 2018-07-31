@@ -21,9 +21,9 @@ ACTION['AUDIT'] = 100
 ACTION['BLOCK'] = 1
 
 # parse_server variables
-LHOST = 'postfix-filter'
+LHOST = '0.0.0.0'
 LPORT = 10025
-RHOST = 'mail.test.local'
-RPORT = 25
+RHOST = 'postfix.dlp.local'
+RPORT = 10026
 FILTER_QUEUE_PATH = '/var/spool/postfix-filter'
 
