@@ -1,66 +1,49 @@
 version: '2'
 services:
-  emailrelay-in:
-    build: ./Dockerfiles/emailrelay-in
+
+  postfix:
+    build: ./Dockerfiles/docker-postfix
+    environment:
+      - SERVER_HOSTNAME
+      - SMTP_SERVER_IP
+      - SMTP_SERVER
+      - SMTP_PORT
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
+      - FILTER_SERVER
+      - FILTER_SERVER_PORT
+      - POSTFIX_DLP_SERVER
+      - POSTFIX_DLP_PORT
+      - POSTFIX_DLP_HOSTNAME
     ports:
-      - 587:587
+      - 25:25
+      - 10026:10026
     expose:
-      - 587
-    hostname: emailrelay-in
-    volumes:
-      - ERSpoolVolume:/var/spool/emailrelay
-    depends_on:
-      - emailrelay-out
-    networks:
-      - ernet
-
-  emailrelay-out:
-    image: pataquets/emailrelay
-    ports:
-      - ${ER_OUT_PORTNO}
-    networks:
-      - ernet
+      - 25
+    hostname: ${POSTFIX_DLP_HOSTNAME}
     extra_hosts:
-      - "${EXT_MAIL_SERVER}:${EXT_MAIL_SERVER_IP}"
+      - "${SMTP_SERVER}:${SMTP_SERVER_IP}"
     volumes:
-      - ERDataVolume:/var/spool/emailrelay
-    command:
-      - --log 
-      - --poll 
-      - "0"
-      - --forward-to 
-      - ${EXT_MAIL_SERVER}:${EXT_MAIL_SERVER_PORT} 
-      - --forward
-      - --client-tls
-      - --tls-config=1
-      - --log-time
-      - --port
-      - "${ER_OUT_PORTNO}"  
-      - --filter
-      - net:emailrelay-parser:1235 
-      - --filter-timeout
-      - "70"
-      - --remote-clients
+      - PSpoolVolume:/var/spool/postfix
+    restart: always
+    networks:
+      - snet
 
-  emailrelay-resubmit:
-    build: ./Dockerfiles/resubmit
-    volumes_from:
-      - emailrelay-in
-    networks:
-      - ernet
- 
-  emailrelay-parser:
+  postfix-filter:
     build: ./Dockerfiles/parser
+    environment:
+      - FILTER_SERVER_HOST
+      - POSTFIX_DLP_HOSTNAME
+      - POSTFIX_DLP_SERVER
     ports: 
-      - 1235:1235
-    hostname: parser
+      - 10025:10025
+    hostname: ${FILTER_SERVER_HOST}
     networks:
-      - ernet
+      - snet
       - esnet
     volumes:
       - ImagesVolume:/images
-    volumes_from:
-      - emailrelay-out
+      - PFilterVolume:/var/spool/postfix-filter
 
   images-web:
     build: ./Dockerfiles/images
@@ -68,9 +51,9 @@ services:
       - 80:80
     hostname: images
     networks:
-      - ernet
+      - snet
     volumes_from:
-      - emailrelay-parser
+      - postfix-filter
 
   tika-parser:
     build: ./Dockerfiles/tika
@@ -78,7 +61,7 @@ services:
       - 9998:9998
     hostname: tika
     networks:
-      - ernet
+      - snet
 
   elasticsearch:
     build: ./Dockerfiles/elasticsearch
@@ -87,7 +70,7 @@ services:
     hostname: elasticsearch
     networks:
       - esnet
-      - ernet
+      - snet
     environment:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
     ulimits:
@@ -107,7 +90,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - esnet
+      - snet
     volumes:
       - ./Dockerfiles/kibana/config/:/usr/share/kibana/config
 
@@ -115,12 +98,12 @@ services:
     image: buildpack-deps:stretch
     build: ./Dockerfiles/ocr
     networks:
-      - ernet
+      - snet
 volumes:
-  ERSpoolVolume:
-  ERDataVolume:
+  PSpoolVolume:
+  PFilterVolume:
   ESDataVolume:
   ImagesVolume:
 networks:
-  ernet:
+  snet:
   esnet:
