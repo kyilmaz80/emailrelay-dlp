@@ -4,4 +4,4 @@ coloredlogs==5.1.1
 tika==1.13.1
 pdfrw==0.3
 elasticsearch==2.4.0
-Pillow==4.1.1
+Pillow==8.1.1
