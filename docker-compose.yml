@@ -25,22 +25,17 @@ services:
     volumes:
       - ERDataVolume:/var/spool/emailrelay
     command:
-      - --log 
-      - --poll 
-      - "0"
+      - --forward-on-disconnect
       - --forward-to 
       - ${EXT_MAIL_SERVER}:${EXT_MAIL_SERVER_PORT} 
       - --forward
       - --client-tls
-      - --tls-config=1
-      - --log-time
-      - --port
-      - "${ER_OUT_PORTNO}"  
+      - --tls-config=tlsv1.2
+      #- --port
+      #- "${ER_OUT_PORTNO}"  
       - --filter
       - net:emailrelay-parser:1235 
-      - --filter-timeout
-      - "70"
-      - --remote-clients
+      - --filter-timeout=70
 
   emailrelay-resubmit:
     build: ./Dockerfiles/resubmit
