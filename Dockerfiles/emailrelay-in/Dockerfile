@@ -1,4 +1,4 @@
-FROM pataquets/emailrelay
+FROM dcagatay/emailrelay
 MAINTAINER Koray YILMAZ <kyilmaz80@gmail.com>
 
 COPY mail.pem /etc/ssl/certs/

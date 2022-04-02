@@ -1,7 +1,7 @@
 requests==2.20.0
-pyocr==0.4.2
-coloredlogs==5.1.1
-tika==1.13.1
-pdfrw==0.3
-elasticsearch==2.4.0
-Pillow==9.0.1
+pyocr==0.8.1
+coloredlogs==15.0.1
+tika==1.24
+pdfrw==0.4
+elasticsearch==8.1.2
+Pillow==9.1.0

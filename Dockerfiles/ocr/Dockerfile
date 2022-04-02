@@ -1,7 +1,7 @@
-FROM buildpack-deps:stretch
+FROM buildpack-deps:bullseye
 MAINTAINER Koray YILMAZ <kyilmaz80@gmail.com>
 
-ENV LEPTONICA_VER 1.74.4
+ENV LEPTONICA_VER 1.82.0
 
 # build essentials
 RUN apt-get update && apt-get install -y --install-recommends \
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --install-recommends \
 	libleptonica-dev \
 	pkg-config \
 	libpango1.0-dev \
-    python-pip \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # leptonica build
@@ -32,8 +32,8 @@ RUN wget http://www.leptonica.org/source/leptonica-${LEPTONICA_VER}.tar.gz && \
 # tesseract build
 RUN rm -rf tesseract-ocr
 RUN git clone --depth 1  https://github.com/tesseract-ocr/tesseract.git tesseract-ocr && \
-	wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/tur.traineddata && \
-	wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/eng.traineddata && \
+	wget https://github.com/tesseract-ocr/tessdata/raw/main/tur.traineddata && \
+	wget https://github.com/tesseract-ocr/tessdata/raw/main/eng.traineddata && \
   	cd tesseract-ocr && \
     ./autogen.sh && \
     ./configure && \
@@ -55,5 +55,5 @@ RUN	git clone https://github.com/kyilmaz80/python_ocr_tutorial/ && \
 WORKDIR /opt/python_ocr_tutorial/flask_server
 
 EXPOSE 80
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
 

@@ -15,7 +15,7 @@ services:
       - ernet
 
   emailrelay-out:
-    image: pataquets/emailrelay
+    image: dcagatay/emailrelay
     ports:
       - ${ER_OUT_PORTNO}
     networks:
@@ -112,7 +112,7 @@ services:
       - ./Dockerfiles/kibana/config/:/usr/share/kibana/config
 
   image-parser:
-    image: buildpack-deps:stretch
+    image: buildpack-deps:bullseye
     build: ./Dockerfiles/ocr
     networks:
       - ernet
