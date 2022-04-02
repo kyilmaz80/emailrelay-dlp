@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.10.4-bullseye
 MAINTAINER Koray YILMAZ <kyilmaz80@gmail.com>
 
 ENV INSTALL_PATH /scripts
