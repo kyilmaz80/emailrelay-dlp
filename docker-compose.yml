@@ -3,9 +3,9 @@ services:
   emailrelay-in:
     build: ./Dockerfiles/emailrelay-in
     ports:
-      - 587:587
+      - "127.0.0.1:25:25"
     expose:
-      - 587
+      - 25
     hostname: emailrelay-in
     volumes:
       - ERSpoolVolume:/var/spool/emailrelay
@@ -17,7 +17,9 @@ services:
   emailrelay-out:
     image: dcagatay/emailrelay
     ports:
-      - ${ER_OUT_PORTNO}
+      - "${ER_OUT_PORTNO}:${ER_OUT_PORTNO}"
+    environment:
+      PORT: ${ER_OUT_PORTNO}
     networks:
       - ernet
     extra_hosts:
@@ -47,7 +49,7 @@ services:
   emailrelay-parser:
     build: ./Dockerfiles/parser
     ports: 
-      - 1235:1235
+      - "127.0.0.1:1235:1235"
     hostname: parser
     networks:
       - ernet
@@ -60,7 +62,7 @@ services:
   images-web:
     build: ./Dockerfiles/images
     ports:
-      - 80:80
+      - "127.0.0.1:80:80"
     hostname: images
     networks:
       - ernet
@@ -70,7 +72,7 @@ services:
   tika-parser:
     build: ./Dockerfiles/tika
     ports:
-      - 9998:9998
+      - "127.0.0.1:9998:9998"
     hostname: tika
     networks:
       - ernet
@@ -78,7 +80,7 @@ services:
   elasticsearch:
     build: ./Dockerfiles/elasticsearch
     ports:
-      - 9200:9200
+      - "127.0.0.1:9200:9200"
     hostname: elasticsearch
     networks:
       - esnet
@@ -97,7 +99,7 @@ services:
   kibana:
     build: ./Dockerfiles/kibana
     ports:
-      - 5601:5601
+      - "127.0.0.1:5601:5601"
     hostname: kibana
     depends_on:
       - elasticsearch

@@ -14,6 +14,10 @@ RUN rm -rf emailrelay-dlp
 
 RUN git clone --depth 1 https://github.com/kyilmaz80/emailrelay-dlp
 
+#RUN mkdir emailrelay-dlp
+
+#COPY * emailrelay-dlp/
+
 WORKDIR /usr/src/app/emailrelay-dlp/
 
 RUN pip install --no-cache-dir -r requirements.txt
