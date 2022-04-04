@@ -61,10 +61,11 @@ def main(file_name, patterns_dict=None, regexes_list=None):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(1)
-    result = sock.connect_ex((params.ES_SERVER, 9200))
+    result = sock.connect_ex((params.ES_SERVER, params.ES_PORT))
     if result == 0:
         logging.info("Elastic Search port is open")
-        es = Elasticsearch(hosts=params.ES_SERVER, http_auth=params.ES_AUTH)
+        es = Elasticsearch([params.ES_SCHEME + '://' + params.ES_SERVER + ':' + str(params.ES_PORT)], 
+                http_auth = params.ES_AUTH)
         if es.ping():
             isClusterReady = True
         else:
@@ -126,8 +127,7 @@ def main(file_name, patterns_dict=None, regexes_list=None):
                 else:
                     try:
                         es.index(index=params.ES_INDEX_NAME,
-                                 doc_type='message',
-                                 body=datajson, request_timeout=30)
+                                 document=datajson, request_timeout=30)
                         logging.info('elasticsearch index successful')
                     except Exception as e:
                         logging.error('elasticsearch index failure')
