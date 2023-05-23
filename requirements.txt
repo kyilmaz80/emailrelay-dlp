@@ -1,4 +1,4 @@
-requests==2.27.1
+requests==2.31.0
 pyocr==0.8.1
 coloredlogs==15.0.1
 tika==1.24
